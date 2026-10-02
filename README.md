@@ -70,4 +70,71 @@ The physical architecture follows a central Star Topology layout:
 │   └── Leeto_Freight_Star_Network.pkt
 └── 04-Evidence-and-Testing/
 
-Milestone 2: Client Implementation & Verification Review1. Executive SummaryMilestone 2 transitions the initial conceptual design into a fully functional Cisco Packet Tracer simulation for Leeto Freight and Logistics. The topology follows a central Hierarchical Star Architecture with segmented logical traffic, inter-VLAN routing, link aggregation (EtherChannel), and wireless security hardening[cite: 1, 2, 3].   2. Physical & Logical Topology OverviewPhysical Star ArchitectureCentral Core Node: SW-Core-01 directly linked to edge router RTA-Mahikeng-Core.   Spoke Access Switch Nodes:SW-IT-01 — Core servers (DHCP, DNS, Web) and network administration.   SW-Logistics-01 — Warehouse floor terminals, tracking devices, and wireless access point (WAP-Logistics).   SW-Admin-01 — Workstations for administrative and finance staff.   SW-Future-01 — Pre-provisioned switch trunk reserved for next year's expansion.   Logical VLAN Segmentation & VLSM Addressing Scheme (172.30.20.0/23 Base)Department / VLANAssigned CIDRSubnet MaskUsable IP RangeNetwork / Broadcast AddressVLAN 20: Logistics & Ops/25255.255.255.128172.30.20.1 – 172.30.20.126172.30.20.0 / 172.30.20.127VLAN 30: Admin & Finance/26255.255.255.192172.30.20.129 – 172.30.20.190172.30.20.128 / 172.30.20.191VLAN 10: IT & Infrastructure/27255.255.255.224172.30.20.193 – 172.30.20.222172.30.20.192 / 172.30.20.223VLAN 40: Drivers / Guest Wi-Fi/27255.255.255.224172.30.20.225 – 172.30.20.254172.30.20.224 / 172.30.20.255VLAN 50: Future Expansion/25255.255.255.128172.30.21.1 – 172.30.21.126172.30.21.0 / 172.30.21.127
+# Leeto Freight and Logistics Network Implementation
+**Course:** CMPG 325 - Computer Networks  
+**Student:** K E Mampo (35987774)  
+**Date:** October 2, 2026[cite: 1, 4]  
+**Repository:** [cmpg325-Project-milestone-1](https://github.com/mampokgotlaetsle-ship-it/cmpg325-Project-milestone-1.git)[cite: 1]
+
+---
+
+## Milestone 2: Client Implementation & Verification Review
+
+### 1. Executive Summary
+Milestone 2 transitions the initial conceptual design into a fully functional Cisco Packet Tracer simulation for **Leeto Freight and Logistics**[cite: 1, 4]. The topology follows a central **Hierarchical Star Architecture** with segmented logical traffic, inter-VLAN routing, link aggregation (EtherChannel), and wireless security hardening[cite: 1, 2, 3].
+
+---
+
+### 2. Physical & Logical Topology Overview
+
+#### Physical Star Architecture
+- **Central Core Node:** `SW-Core-01` directly linked to edge router `RTA-Mahikeng-Core`.
+- **Spoke Access Switch Nodes:**
+  - `SW-IT-01` — Core servers (DHCP, DNS, Web) and network administration.
+  - `SW-Logistics-01` — Warehouse floor terminals, tracking devices, and wireless access point (`WAP-Logistics`)[cite: 1].
+  - `SW-Admin-01` — Workstations for administrative and finance staff[cite: 1].
+  - `SW-Future-01` — Pre-provisioned switch trunk reserved for next year's expansion[cite: 1].
+
+#### Logical VLAN Segmentation & VLSM Addressing Scheme (`172.30.20.0/23` Base)[cite: 1]
+
+| Department / VLAN | Assigned CIDR | Subnet Mask | Usable IP Range | Network / Broadcast Address |
+| :--- | :--- | :--- | :--- | :--- |
+| **VLAN 20:** Logistics & Ops | `/25` | `255.255.255.128` | `172.30.20.1 – 172.30.20.126` | `172.30.20.0 / 172.30.20.127` |
+| **VLAN 30:** Admin & Finance | `/26` | `255.255.255.192` | `172.30.20.129 – 172.30.20.190` | `172.30.20.128 / 172.30.20.191` |
+| **VLAN 10:** IT & Infrastructure | `/27` | `255.255.255.224` | `172.30.20.193 – 172.30.20.222` | `172.30.20.192 / 172.30.20.223` |
+| **VLAN 40:** Drivers / Guest Wi-Fi | `/27` | `255.255.255.224` | `172.30.20.225 – 172.30.20.254` | `172.30.20.224 / 172.30.20.255` |
+| **VLAN 50:** Future Expansion | `/25` | `255.255.255.128` | `172.30.21.1 – 172.30.21.126` | `172.30.21.0 / 172.30.21.127` |
+
+---
+
+### 3. Implemented Core Configurations
+
+#### A. Router-on-a-Stick Inter-VLAN Routing (`RTA-Mahikeng-Core`)[cite: 1]
+```text
+enable
+configure terminal
+hostname RTA-Mahikeng-Core
+
+interface GigabitEthernet0/0/0
+ no shutdown
+
+interface GigabitEthernet0/0/0.10
+ encapsulation dot1Q 10
+ ip address 172.30.20.193 255.255.255.224
+
+interface GigabitEthernet0/0/0.20
+ encapsulation dot1Q 20
+ ip address 172.30.20.1 255.255.255.128
+
+interface GigabitEthernet0/0/0.30
+ encapsulation dot1Q 30
+ ip address 172.30.20.129 255.255.255.192
+
+interface GigabitEthernet0/0/0.40
+ encapsulation dot1Q 40
+ ip address 172.30.20.225 255.255.255.224
+
+interface GigabitEthernet0/0/0.50
+ encapsulation dot1Q 50
+ ip address 172.30.21.1 255.255.255.128
+end
