@@ -69,3 +69,54 @@ The physical architecture follows a central Star Topology layout:
 ├── 03-PacketTracer/
 │   └── Leeto_Freight_Star_Network.pkt
 └── 04-Evidence-and-Testing/
+
+# Milestone 2: Client Implementation & Verification Review
+**Course:** CMPG 325 - Computer Networks  
+**Project:** Leeto Freight and Logistics Network Implementation  
+**Date:** October 2, 2026  
+
+---
+
+## 1. Overview & Assigned Features Implemented
+
+During Milestone 2, the network design was translated into a working simulation in Cisco Packet Tracer. Key features implemented include:
+
+- **Physical Star Topology:** Central hub (`SW-Core-01`) connected to edge router (`RTA-Mahikeng-Core`) and four spoke access switches.
+- **VLAN Segmentation:** Created and assigned VLANs 10, 20, 30, 40, and 50 across all switches.
+- **Inter-VLAN Routing (Router-on-a-Stick):** Configured sub-interfaces on `RTA-Mahikeng-Core` to route traffic between departments using VLSM subnets.
+- **Trunking & EtherChannel:** Configured IEEE 802.1Q trunking and LACP Port-Channels (`Po1`) between `SW-Core-01` and spoke switches.
+- **Wireless Security:** Applied WPA2-PSK hardening on `WAP-Logistics`.
+
+---
+
+## 2. Core Configurations
+
+### A. Router Inter-VLAN Configuration (`RTA-Mahikeng-Core`)
+```text
+enable
+configure terminal
+hostname RTA-Mahikeng-Core
+
+interface GigabitEthernet0/0/0
+ no shutdown
+
+interface GigabitEthernet0/0/0.10
+ encapsulation dot1Q 10
+ ip address 172.30.20.193 255.255.255.224
+
+interface GigabitEthernet0/0/0.20
+ encapsulation dot1Q 20
+ ip address 172.30.20.1 255.255.255.128
+
+interface GigabitEthernet0/0/0.30
+ encapsulation dot1Q 30
+ ip address 172.30.20.129 255.255.255.192
+
+interface GigabitEthernet0/0/0.40
+ encapsulation dot1Q 40
+ ip address 172.30.20.225 255.255.255.224
+
+interface GigabitEthernet0/0/0.50
+ encapsulation dot1Q 50
+ ip address 172.30.21.1 255.255.255.128
+end
